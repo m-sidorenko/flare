@@ -1,0 +1,10 @@
+[project]
+name = "flare"
+version = "0.1.0"
+description = "Real-time alert relay from Logfire to Telegram chats"
+readme = "README.md"
+authors = [
+  { name = "Mikhail Sidorenko", email = "mi.sidoren@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = []
