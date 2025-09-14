@@ -7,4 +7,13 @@ authors = [
   { name = "Mikhail Sidorenko", email = "mi.sidoren@gmail.com" }
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "fastapi>=0.116.1",
+    "httpx>=0.28.1",
+    "logfire>=4.7.0",
+    "loguru>=0.7.3",
+    "pydantic>=2.11.7",
+    "pydantic-settings>=2.10.1",
+    "python-telegram-bot>=22.3",
+    "uvicorn>=0.35.0",
+]
