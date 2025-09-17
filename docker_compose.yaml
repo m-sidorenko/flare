@@ -4,7 +4,7 @@ services:
         context: ..
         dockerfile: Dockerfile
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/health" ]
+      test: [ "CMD", "curl", "-f", "http://${SERVICE_HOST:-localhost}:${SERVICE_PORT:-8080}/health" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -16,7 +16,7 @@ services:
       - LOGFIRE_TOKEN=${LOGFIRE_TOKEN:-abc}
       - LOGFIRE_ENV=${LOGFIRE_ENV:-dev}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
-      - PROJECT_ROOT_PATH=${PROJECT_ROOT_PATH:-abc}
+      - PROJECT_ROOT_PATH=${PROJECT_ROOT_PATH:-"abc"}
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-abc}
       - CHAT_ID=${CHAT_ID:-123}
     ports:
