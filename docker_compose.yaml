@@ -1,0 +1,23 @@
+services:
+  flare_service:
+    build:
+        context: ..
+        dockerfile: Dockerfile
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    environment:
+      - SERVICE_HOST=${SERVICE_HOST:-localhost}
+      - SERVICE_PORT=${SERVICE_PORT:-8080}
+      - PUBLIC_URL=${PUBLIC_URL:-abc}
+      - LOGFIRE_TOKEN=${LOGFIRE_TOKEN:-abc}
+      - LOGFIRE_ENV=${LOGFIRE_ENV:-dev}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - PROJECT_ROOT_PATH=${PROJECT_ROOT_PATH:-abc}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-abc}
+      - CHAT_ID=${CHAT_ID:-123}
+    ports:
+      - "${SERVICE_PORT:-8080}:${SERVICE_PORT:-8080}"
