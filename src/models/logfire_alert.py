@@ -86,31 +86,34 @@ class LogfireAlertPayload(BaseModel):
     description: str
     links: Links
 
-    def to_markdown_message(self) -> str:
+    def to_markdown_messages(self) -> list[str]:
         """
         Convert the alert payload to a markdown-formatted message.
         Returns:
             str: The formatted markdown message.
         """
         # Example implementation, customize as needed
-        project = escape_markdown(self.project_name, version=2)
-        service = escape_markdown(self.data[0][0] if self.data else 'N/A', version=2)
-        time_msk = escape_markdown(
-            self.timestamp.astimezone(tz=timezone(timedelta(hours=3))).strftime('%H:%M:%S %d.%m.%Y'), version=2)
-        time_tbi = escape_markdown(
-            self.timestamp.astimezone(tz=timezone(timedelta(hours=4))).strftime('%H:%M:%S %d.%m.%Y'), version=2)
-        msg = str(self.data[0][1]) if self.data and len(self.data[0]) > 1 else 'N/A'
+        messages = []
+        for i in range(self.n_rows):
+            project = escape_markdown(self.project_name, version=2)
+            service = escape_markdown(self.data[i][0] if self.data else 'N/A', version=2)
+            time_msk = escape_markdown(
+                self.timestamp.astimezone(tz=timezone(timedelta(hours=3))).strftime('%H:%M:%S %d.%m.%Y'), version=2)
+            time_tbi = escape_markdown(
+                self.timestamp.astimezone(tz=timezone(timedelta(hours=4))).strftime('%H:%M:%S %d.%m.%Y'), version=2)
+            msg = str(self.data[i][1]) if self.data and len(self.data[i]) > 1 else 'N/A'
 
-        link = self.links.alert
+            link = self.links.alert
 
-        message = (
-            "🚨 *New Alert* 🚨\n\n"
-            f"*Project*: {project}\n"
-            f"*Service*: {service}\n\n"
-            f"*Time* `MSK`: {time_msk}\n"
-            f"*Time* `TBI`: {time_tbi}\n\n"
-            f"*Message*:\n```\n{msg}\n```\n"
-            f"[View in Logfire]({link})\n"
-        )
-        return message
+            message = (
+                "🚨 *New Alert* 🚨\n\n"
+                f"*Project*: {project}\n"
+                f"*Service*: {service}\n\n"
+                f"*Time* `MSK`: {time_msk}\n"
+                f"*Time* `TBI`: {time_tbi}\n\n"
+                f"*Message*:\n```\n{msg}\n```\n"
+                f"[View in Logfire]({link})\n"
+            )
+            messages.append(message)
+        return messages
 
