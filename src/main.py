@@ -69,14 +69,16 @@ async def health_check():
 async def receive_alert(logfire_alert: dict):
     try:
         logfire_alert = LogfireAlertPayload(**logfire_alert)
+        logger.info(f"Received alert: {logfire_alert} with {logfire_alert.n_rows} entries")
 
-        logger.info(f"Received alert: {logfire_alert}")
         chat_id = config.chat_id
-        await application.bot.send_message(
-            chat_id=chat_id,
-            text=logfire_alert.to_markdown_message(),
-            parse_mode="MarkdownV2",
-        )
+        messages_list = logfire_alert.to_markdown_messages()
+        for msg in messages_list:
+            await application.bot.send_message(
+                chat_id=chat_id,
+                text=msg,
+                parse_mode="MarkdownV2",
+            )
         return {"status": "ok"}
     except Exception as e:
         logger.error(f"Invalid alert payload: {e}")
@@ -92,6 +94,7 @@ async def main():
         log_level=config.log_level.lower()
     )
     uvicorn_server = uvicorn.Server(server_config)
+    logger.success(f"Starting server at {config.service_host}:{config.service_port}...")
     await uvicorn_server.serve()
 
 
